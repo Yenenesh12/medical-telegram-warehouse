@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-telegram_warehouse}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  dagster:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DAGSTER_POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      DAGSTER_POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DAGSTER_POSTGRES_DB: ${POSTGRES_DB:-telegram_warehouse}
+      DAGSTER_POSTGRES_HOST: postgres
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    command: dagster dev -h 0.0.0.0 -p 3000
+
+  api:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-telegram_warehouse}
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+
+volumes:
+  postgres_data:

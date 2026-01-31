@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: stg_telegram_messages
+    description: "Staging table for cleaned Telegram messages"
+    columns:
+      - name: message_id
+        description: "Unique message identifier"
+        tests:
+          - not_null
+          - unique
+      - name: channel_name
+        description: "Name of the Telegram channel"
+        tests:
+          - not_null
+      - name: message_date
+        description: "Timestamp when message was posted"
+        tests:
+          - not_null
+      - name: message_text
+        description: "Cleaned message text content"
+      - name: has_media
+        description: "Boolean indicating if message has media"
+      - name: views
+        description: "Number of views on the message"
+        tests:
+          - not_null
+      - name: forwards
+        description: "Number of times message was forwarded"
+        tests:
+          - not_null
+      - name: message_key
+        description: "Surrogate key for the message"
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_channels
+    description: "Staging table for channel information"
+    columns:
+      - name: channel_name
+        description: "Name of the Telegram channel"
+        tests:
+          - not_null
+          - unique
+      - name: channel_key
+        description: "Surrogate key for the channel"
+        tests:
+          - unique
+          - not_null
+      - name: total_posts
+        description: "Total number of posts in the channel"
+        tests:
+          - not_null

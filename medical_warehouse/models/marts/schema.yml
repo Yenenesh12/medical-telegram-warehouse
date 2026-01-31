@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: dim_channels
+    description: "Dimension table for Telegram channels"
+    columns:
+      - name: channel_key
+        description: "Surrogate key for the channel"
+        tests:
+          - not_null
+          - unique
+      - name: channel_name
+        description: "Original channel name"
+        tests:
+          - not_null
+      - name: total_posts
+        description: "Total posts in channel"
+        tests:
+          - not_null
+
+  - name: fct_messages
+    description: "Fact table for Telegram messages"
+    columns:
+      - name: message_key
+        description: "Surrogate key for the message"
+        tests:
+          - not_null
+          - unique
+      - name: channel_key
+        description: "Foreign key to dim_channels"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_channels')
+              field: channel_key
+      - name: date_key
+        description: "Foreign key to dim_dates"
+        tests:
+          - not_null
+          - relationships:
+              to: source('utils', 'dim_dates')
+              field: date_key
+      - name: views
+        description: "Number of views"
+        tests:
+          - not_null
+      - name: forwards
+        description: "Number of forwards"
+        tests:
+          - not_null

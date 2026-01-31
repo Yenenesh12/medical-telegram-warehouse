@@ -1,0 +1,14 @@
+medical_warehouse:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('POSTGRES_HOST', 'localhost') }}"
+      port: "{{ env_var('POSTGRES_PORT', 5432) | int }}"
+      user: "{{ env_var('POSTGRES_USER', 'postgres') }}"
+      pass: "{{ env_var('POSTGRES_PASSWORD', 'yene1995') }}"
+      dbname: "{{ env_var('POSTGRES_DB', 'telegram_warehouse') }}"
+      schema: "{{ env_var('DBT_SCHEMA', 'dbt') }}"
+      threads: 4
+      keepalives_idle: 0
+      sslmode: disable
