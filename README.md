@@ -26,7 +26,7 @@ A comprehensive data pipeline that scrapes medical content from Telegram channel
 ### Option 1: Docker Compose (Recommended)
 ```bash
 # Clone and navigate to project
-git clone <repository-url>
+git clone <https://github.com/Yenenesh12/medical-telegram-warehouse.git>
 cd telegram-medical-warehouse
 
 # Start all services
@@ -48,17 +48,14 @@ pip install -r requirements.txt
 2. **Environment Configuration**
 Create `.env` file:
 ```env
-# Telegram API (get from https://my.telegram.org)
-API_ID=your_telegram_api_id
-API_HASH=your_telegram_api_hash
-PHONE_NUMBER=your_phone_number
+
 
 # Database
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
 POSTGRES_DB=telegram_warehouse
 POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
+POSTGRES_PASSWORD=yene1995
 ```
 
 3. **Initialize Database**
